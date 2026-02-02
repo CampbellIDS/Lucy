@@ -26,8 +26,8 @@
         }
         
         .couple-photo {
-            width: 350px;
-            height: 450px;
+            width: 300px;          /* Adjusted for portrait */
+            height: 500px;         /* Adjusted for 900x1600 ratio */
             border-radius: 20px;
             overflow: hidden;
             margin: 2rem 0;
@@ -38,7 +38,8 @@
         .couple-photo img {
             width: 100%;
             height: 100%;
-            object-fit: cover;
+            object-fit: cover;     /* This will crop to fit */
+            /* OR use object-fit: contain; to show entire image */
         }
         
         .celebration-text {
@@ -134,7 +135,7 @@
         </div>
         
         <div class="couple-photo">
-            <!-- Replace with your actual photo -->
+            <!-- Your portrait photo -->
             <img src="./img/lucy.png" alt="Lucy & Campbell">
         </div>
         
