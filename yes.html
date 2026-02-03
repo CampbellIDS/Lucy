@@ -119,10 +119,10 @@
             }
         }
         
-        /* NEW: Photo Gallery Styles */
+        /* NEW: Vertical Photo Gallery Styles */
         .gallery-section {
             width: 100%;
-            max-width: 1200px;
+            max-width: 800px;
             margin: 3rem auto;
             padding: 2rem;
             background: rgba(255, 255, 255, 0.1);
@@ -138,43 +138,61 @@
             text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
         }
         
-        .photo-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 1.5rem;
+        .photo-list {
+            display: flex;
+            flex-direction: column;
+            gap: 3rem;
             margin-bottom: 2rem;
         }
         
         .photo-item {
             background: white;
-            border-radius: 15px;
+            border-radius: 20px;
             overflow: hidden;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
-            transition: all 0.3s ease;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+            transition: all 0.4s ease;
             cursor: pointer;
         }
         
         .photo-item:hover {
-            transform: translateY(-5px) scale(1.02);
-            box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
         }
         
         .photo-caption {
-            padding: 1rem;
-            background: white;
+            padding: 1.5rem;
+            background: linear-gradient(to right, deeppink, hotpink);
             font-family: "JetBrains Mono", sans-serif;
-            font-size: 1.1rem;
-            color: deeppink;
+            font-size: 1.3rem;
+            color: white;
             font-weight: bold;
             text-align: center;
-            border-bottom: 3px solid hotpink;
+        }
+        
+        .photo-image-container {
+            padding: 1.5rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 300px;
+            background: white;
         }
         
         .photo-image {
-            width: 100%;
-            height: 200px;
-            object-fit: cover;
-            display: block;
+            max-width: 100%;
+            max-height: 500px;
+            object-fit: contain;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        
+        /* Heart divider between photos */
+        .photo-divider {
+            text-align: center;
+            font-size: 2rem;
+            color: white;
+            margin: 1rem 0;
+            opacity: 0.7;
         }
         
         /* Lightbox Styles */
@@ -185,7 +203,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.9);
+            background: rgba(0,0,0,0.95);
             z-index: 1000;
             justify-content: center;
             align-items: center;
@@ -210,26 +228,26 @@
         .lightbox-caption {
             color: white;
             font-family: "JetBrains Mono", sans-serif;
-            font-size: 1.5rem;
+            font-size: 1.8rem;
             text-align: center;
-            margin-top: 1rem;
-            padding: 1rem;
+            margin-top: 1.5rem;
+            padding: 1.5rem;
             background: rgba(255,255,255,0.1);
             border-radius: 10px;
         }
         
         .close-lightbox {
             position: absolute;
-            top: -40px;
-            right: -40px;
+            top: -50px;
+            right: -50px;
             color: white;
             font-size: 3rem;
             cursor: pointer;
             background: none;
             border: none;
             padding: 0;
-            width: 40px;
-            height: 40px;
+            width: 50px;
+            height: 50px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -240,18 +258,32 @@
         }
         
         @media (max-width: 768px) {
-            .photo-grid {
-                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            }
-            
             .gallery-title {
                 font-size: 1.8rem;
+            }
+            
+            .photo-caption {
+                font-size: 1.1rem;
+                padding: 1rem;
+            }
+            
+            .photo-image-container {
+                min-height: 200px;
+                padding: 1rem;
+            }
+            
+            .photo-image {
+                max-height: 400px;
             }
             
             .close-lightbox {
                 top: -30px;
                 right: 10px;
                 font-size: 2.5rem;
+            }
+            
+            .lightbox-caption {
+                font-size: 1.4rem;
             }
         }
     </style>
@@ -298,10 +330,10 @@
             <strong>Dress Code:</strong> Something special ;) ✨
         </div>
         
-        <!-- NEW: Photo Gallery Section -->
+        <!-- NEW: Vertical Photo Gallery Section -->
         <div class="gallery-section">
-            <h2 class="gallery-title">Our Journey Together 💖</h2>
-            <div class="photo-grid" id="photoGallery">
+            <h2 class="gallery-title">Our Story in Pictures 📖💖</h2>
+            <div class="photo-list" id="photoGallery">
                 <!-- Photos will be added by JavaScript -->
             </div>
         </div>
@@ -361,44 +393,55 @@
         // Photo Gallery Data - ADD YOUR 20 PHOTOS HERE
         const photos = [
             // Format: { src: "path/to/photo.jpg", caption: "Your caption here" }
-            { src: "./img/lucy.jpg", caption: "My Favorite Person ❤️" },
-            { src: "./img/memory1.jpg", caption: "Our First Adventure 🗺️" },
-            { src: "./img/memory2.jpg", caption: "That Perfect Sunset 🌅" },
-            { src: "./img/memory3.jpg", caption: "Laughing Until We Cry 😂" },
-            { src: "./img/memory4.jpg", caption: "Coffee Date Mornings ☕" },
-            { src: "./img/memory5.jpg", caption: "Movie Nights 🎬" },
-            { src: "./img/memory6.jpg", caption: "Exploring Together 🚶‍♂️🚶‍♀️" },
-            { src: "./img/memory7.jpg", caption: "Sweet Moments 🍭" },
-            { src: "./img/memory8.jpg", caption: "Best Friends Forever 👫" },
-            { src: "./img/memory9.jpg", caption: "Dreaming Together 💭" },
-            { src: "./img/memory10.jpg", caption: "Your Beautiful Smile 😊" },
-            { src: "./img/memory11.jpg", caption: "Adventures Await! 🚀" },
-            { src: "./img/memory12.jpg", caption: "Cozy Evenings 🛋️" },
-            { src: "./img/memory13.jpg", caption: "Making Memories 📸" },
-            { src: "./img/memory14.jpg", caption: "Perfect Together ✨" },
-            { src: "./img/memory15.jpg", caption: "My Heart 💘" },
-            { src: "./img/memory16.jpg", caption: "Always You 💕" },
-            { src: "./img/memory17.jpg", caption: "Happy Days 🌞" },
-            { src: "./img/memory18.jpg", caption: "Love in the Air 💌" },
-            { src: "./img/memory19.jpg", caption: "Our Story 📖" },
-            { src: "./img/memory20.jpg", caption: "Forever & Always 💍" }
+            { src: "./img/lucy.jpg", caption: "The Beginning of Everything ❤️" },
+            { src: "./img/memory1.jpg", caption: "First Date Nerves Turned to Smiles 😊" },
+            { src: "./img/memory2.jpg", caption: "Discovering Our Favorite Spots Together 🗺️" },
+            { src: "./img/memory3.jpg", caption: "Laughter That Fills My Heart 🤣" },
+            { src: "./img/memory4.jpg", caption: "Quiet Moments I Cherish Forever 🤫" },
+            { src: "./img/memory5.jpg", caption: "Adventures We'll Never Forget 🚀" },
+            { src: "./img/memory6.jpg", caption: "Your Smile Lights Up My World ✨" },
+            { src: "./img/memory7.jpg", caption: "Growing Closer Every Day 🌱" },
+            { src: "./img/memory8.jpg", caption: "Partners in Crime 👫" },
+            { src: "./img/memory9.jpg", caption: "Dreaming Big Together 💭" },
+            { src: "./img/memory10.jpg", caption: "That Look That Says Everything 😍" },
+            { src: "./img/memory11.jpg", caption: "Making Ordinary Days Special 🌟" },
+            { src: "./img/memory12.jpg", caption: "Our Little World 🏠" },
+            { src: "./img/memory13.jpg", caption: "Hand in Hand, Heart to Heart 🤝" },
+            { src: "./img/memory14.jpg", caption: "You Make Everything Better 💫" },
+            { src: "./img/memory15.jpg", caption: "My Favorite Person, Always 💘" },
+            { src: "./img/memory16.jpg", caption: "Building Our Story Together 📖" },
+            { src: "./img/memory17.jpg", caption: "Happy Just Being Us 😌" },
+            { src: "./img/memory18.jpg", caption: "Love in Every Glance 💌" },
+            { src: "./img/memory19.jpg", caption: "Creating Memories That Last Forever ⏳" },
+            { src: "./img/memory20.jpg", caption: "Our Future Starts Now 💍" }
         ];
         
-        // Generate photo gallery
+        // Generate vertical photo gallery
         const photoGallery = document.getElementById('photoGallery');
         
         photos.forEach((photo, index) => {
+            // Create photo item
             const photoItem = document.createElement('div');
             photoItem.className = 'photo-item';
             photoItem.onclick = () => openLightbox(photo.src, photo.caption);
             
             photoItem.innerHTML = `
                 <div class="photo-caption">${photo.caption}</div>
-                <img class="photo-image" src="${photo.src}" alt="${photo.caption}" 
-                     onerror="this.src='https://images.unsplash.com/photo-${1500000 + index}?ixlib=rb-1.2.1&auto=format&fit=crop&w=400&h=300&q=80'">
+                <div class="photo-image-container">
+                    <img class="photo-image" src="${photo.src}" alt="${photo.caption}" 
+                         onerror="this.src='https://images.unsplash.com/photo-${1500000 + index}?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&h=600&q=80'">
+                </div>
             `;
             
             photoGallery.appendChild(photoItem);
+            
+            // Add heart divider between photos (except after last one)
+            if (index < photos.length - 1) {
+                const divider = document.createElement('div');
+                divider.className = 'photo-divider';
+                divider.innerHTML = '❤️ ❤️ ❤️';
+                photoGallery.appendChild(divider);
+            }
         });
         
         // Lightbox functionality
