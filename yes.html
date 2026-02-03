@@ -118,14 +118,158 @@
                 transform: translateY(100vh) rotate(360deg);
             }
         }
+        
+        /* NEW: Photo Gallery Styles */
+        .gallery-section {
+            width: 100%;
+            max-width: 1200px;
+            margin: 3rem auto;
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .gallery-title {
+            font-family: "JetBrains Mono", sans-serif;
+            font-size: 2.2rem;
+            color: white;
+            margin-bottom: 2rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .photo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .photo-item {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .photo-item:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+        }
+        
+        .photo-caption {
+            padding: 1rem;
+            background: white;
+            font-family: "JetBrains Mono", sans-serif;
+            font-size: 1.1rem;
+            color: deeppink;
+            font-weight: bold;
+            text-align: center;
+            border-bottom: 3px solid hotpink;
+        }
+        
+        .photo-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            display: block;
+        }
+        
+        /* Lightbox Styles */
+        .lightbox {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.9);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+        }
+        
+        .lightbox-content {
+            max-width: 90%;
+            max-height: 90%;
+            position: relative;
+        }
+        
+        .lightbox img {
+            width: 100%;
+            height: auto;
+            max-height: 80vh;
+            object-fit: contain;
+            border-radius: 10px;
+            box-shadow: 0 0 40px rgba(255,255,255,0.2);
+        }
+        
+        .lightbox-caption {
+            color: white;
+            font-family: "JetBrains Mono", sans-serif;
+            font-size: 1.5rem;
+            text-align: center;
+            margin-top: 1rem;
+            padding: 1rem;
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+        }
+        
+        .close-lightbox {
+            position: absolute;
+            top: -40px;
+            right: -40px;
+            color: white;
+            font-size: 3rem;
+            cursor: pointer;
+            background: none;
+            border: none;
+            padding: 0;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .close-lightbox:hover {
+            color: pink;
+        }
+        
+        @media (max-width: 768px) {
+            .photo-grid {
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            }
+            
+            .gallery-title {
+                font-size: 1.8rem;
+            }
+            
+            .close-lightbox {
+                top: -30px;
+                right: 10px;
+                font-size: 2.5rem;
+            }
+        }
     </style>
 </head>
 <body>
     <!-- Falling hearts background -->
     <div class="hearts" id="hearts"></div>
     
+    <!-- Lightbox -->
+    <div class="lightbox" id="lightbox">
+        <div class="lightbox-content">
+            <button class="close-lightbox" onclick="closeLightbox()">×</button>
+            <img id="lightbox-img" src="" alt="">
+            <div class="lightbox-caption" id="lightbox-caption"></div>
+        </div>
+    </div>
+    
     <div class="yes-page">
-        <!-- Title with inline black color -->
         <h1 class="confirmation-message" style="color: black;">
             🎉 You Said YES! 🎉
         </h1>
@@ -135,7 +279,6 @@
         </div>
         
         <div class="couple-photo">
-            <!-- Your portrait photo - will display at natural aspect ratio -->
             <img src="./img/lucy.jpg" alt="Lucy & Campbell">
         </div>
         
@@ -155,9 +298,17 @@
             <strong>Dress Code:</strong> Something special ;) ✨
         </div>
         
+        <!-- NEW: Photo Gallery Section -->
+        <div class="gallery-section">
+            <h2 class="gallery-title">Our Journey Together 💖</h2>
+            <div class="photo-grid" id="photoGallery">
+                <!-- Photos will be added by JavaScript -->
+            </div>
+        </div>
+        
         <div class="navigation">
             <a href="index.html" class="btn">← Back Home</a>
-            <a href="plans.html" class="btn">View Our Plans →</a>
+            <a href="gallery.html" class="btn">View Our Plans →</a>
         </div>
     </div>
 
@@ -176,22 +327,20 @@
             
             heartsContainer.appendChild(heart);
             
-            // Remove heart after animation completes
             setTimeout(() => {
                 heart.remove();
             }, 8000);
         }
         
-        // Create hearts periodically
         setInterval(createHeart, 300);
-        
-        // Create initial hearts
         for (let i = 0; i < 15; i++) {
             setTimeout(createHeart, i * 100);
         }
         
         // Add click celebration
         document.addEventListener('click', function(e) {
+            if (e.target.closest('.photo-item') || e.target.closest('.btn')) return;
+            
             const clickHeart = document.createElement('div');
             clickHeart.classList.add('heart');
             clickHeart.innerHTML = '💖';
@@ -208,6 +357,83 @@
                 clickHeart.remove();
             }, 1500);
         });
+        
+        // Photo Gallery Data - ADD YOUR 20 PHOTOS HERE
+        const photos = [
+            // Format: { src: "path/to/photo.jpg", caption: "Your caption here" }
+            { src: "./img/lucy.jpg", caption: "My Favorite Person ❤️" },
+            { src: "./img/memory1.jpg", caption: "Our First Adventure 🗺️" },
+            { src: "./img/memory2.jpg", caption: "That Perfect Sunset 🌅" },
+            { src: "./img/memory3.jpg", caption: "Laughing Until We Cry 😂" },
+            { src: "./img/memory4.jpg", caption: "Coffee Date Mornings ☕" },
+            { src: "./img/memory5.jpg", caption: "Movie Nights 🎬" },
+            { src: "./img/memory6.jpg", caption: "Exploring Together 🚶‍♂️🚶‍♀️" },
+            { src: "./img/memory7.jpg", caption: "Sweet Moments 🍭" },
+            { src: "./img/memory8.jpg", caption: "Best Friends Forever 👫" },
+            { src: "./img/memory9.jpg", caption: "Dreaming Together 💭" },
+            { src: "./img/memory10.jpg", caption: "Your Beautiful Smile 😊" },
+            { src: "./img/memory11.jpg", caption: "Adventures Await! 🚀" },
+            { src: "./img/memory12.jpg", caption: "Cozy Evenings 🛋️" },
+            { src: "./img/memory13.jpg", caption: "Making Memories 📸" },
+            { src: "./img/memory14.jpg", caption: "Perfect Together ✨" },
+            { src: "./img/memory15.jpg", caption: "My Heart 💘" },
+            { src: "./img/memory16.jpg", caption: "Always You 💕" },
+            { src: "./img/memory17.jpg", caption: "Happy Days 🌞" },
+            { src: "./img/memory18.jpg", caption: "Love in the Air 💌" },
+            { src: "./img/memory19.jpg", caption: "Our Story 📖" },
+            { src: "./img/memory20.jpg", caption: "Forever & Always 💍" }
+        ];
+        
+        // Generate photo gallery
+        const photoGallery = document.getElementById('photoGallery');
+        
+        photos.forEach((photo, index) => {
+            const photoItem = document.createElement('div');
+            photoItem.className = 'photo-item';
+            photoItem.onclick = () => openLightbox(photo.src, photo.caption);
+            
+            photoItem.innerHTML = `
+                <div class="photo-caption">${photo.caption}</div>
+                <img class="photo-image" src="${photo.src}" alt="${photo.caption}" 
+                     onerror="this.src='https://images.unsplash.com/photo-${1500000 + index}?ixlib=rb-1.2.1&auto=format&fit=crop&w=400&h=300&q=80'">
+            `;
+            
+            photoGallery.appendChild(photoItem);
+        });
+        
+        // Lightbox functionality
+        const lightbox = document.getElementById('lightbox');
+        const lightboxImg = document.getElementById('lightbox-img');
+        const lightboxCaption = document.getElementById('lightbox-caption');
+        
+        function openLightbox(imageSrc, caption) {
+            lightboxImg.src = imageSrc;
+            lightboxCaption.textContent = caption;
+            lightbox.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+        
+        function closeLightbox() {
+            lightbox.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+        
+        // Close lightbox when clicking outside image
+        lightbox.addEventListener('click', function(e) {
+            if (e.target === lightbox || e.target.classList.contains('close-lightbox')) {
+                closeLightbox();
+            }
+        });
+        
+        // Close with Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeLightbox();
+            }
+        });
+        
+        // Update the "View Our Plans" button to go to gallery.html
+        document.querySelector('a[href="plans.html"]').href = 'gallery.html';
     </script>
 </body>
 </html>
